@@ -1,12 +1,22 @@
 // requires
 var express = require('express');
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser')
 
 // inicializacion de variables
 var app = express();
 
+// configuracion de body-parser para crear el JSON basado en los datos del x-www-form-unlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// importar rutas
+var appRoutes = require('./routes/app');
+var usuarioRoutes = require('./routes/usuario');
+var loginRoutes = require('./routes/login');
+
 // conexion a la base de datos
-mongoose.connection.openUri('mongodb+srv://adminProUser:5ecXLiVUI9YbMf7r@clustergdicto-mqcsb.mongodb.net/hospitalDB',
+mongoose.connection.openUri('mongodb://adminProUser:5ecXLiVUI9YbMf7r@127.0.0.1:27017/hospitalDB',
   (err, res) => {
     if (err) {
       throw err;
@@ -15,12 +25,9 @@ mongoose.connection.openUri('mongodb+srv://adminProUser:5ecXLiVUI9YbMf7r@cluster
   });
 
 // rutas
-app.get('/', (req, res, next) => {
-  res.status(200).json({
-    ok: true,
-    message: 'Peticion realizada correctamente'
-  });
-});
+app.use('/usuario', usuarioRoutes);
+app.use('/login', loginRoutes);
+app.use('/', appRoutes);
 
 // escuchar peticiones
 app.listen(3000, () => {
