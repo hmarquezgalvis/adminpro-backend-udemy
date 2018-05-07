@@ -18,7 +18,7 @@ exports.verificarToken = (req, res, next) => {
     }
 
     //se coloca el payload en el request global, para que pueda ser usado en cualquier request
-    req.usuario = decoded;
+    req.usuario = decoded.usuario;
 
     //continuar con las siguientes operaciones
     next();
